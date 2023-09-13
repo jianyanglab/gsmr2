@@ -1,0 +1,19 @@
+Package: gsmr
+Maintainer: Zhihong Zhu <z.zhu1@uq.edu.au>, Angli Xue <a.xue@garvan.org.au>
+Author: Zhihong Zhu, Angli Xue, Zhili Zheng, Futao Zhang, Jian Yang
+License: GPL (>= 2.0)
+URL: https://yanglab.westlake.edu.cn/software/gsmr/
+Type: Package
+Title: gsmr - a tool for SMR and HEIDI analysis
+Description: A tool perform Generalized Summary-data-based Mendelian Randomization analysis (GSMR)
+   and HEterogeneity In Dependent Instruments analysis to remove pleiotropic outliers (HEIDI-outlier)
+Version: 1.1.0
+Date: 2017-12-19
+Depends: R (>= 2.15), methods, utils, stats, markdown
+Suggests: knitr, rmarkdown
+Imports: survey
+LazyData: no
+NeedsCompilation: no
+VignetteBuilder: knitr
+RoxygenNote: 7.0.2
+Packaged: 2022-07-21 02:21:06 UTC; uqaxue

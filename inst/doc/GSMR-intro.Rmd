@@ -1,0 +1,215 @@
+---
+title: "An Introduction to gsmr"
+output:
+  html_document: default
+---
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{An Introduction to gsmr package}
+-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Overview
+The **gsmr** R-package implements the GSMR (Generalised Summary-data-based Mendelian Randomisation) method to test for putative causal association between a risk factor and a disease using summary-level data from genome-wide association studies (GWAS) ([Zhu et al. 2018 Nat. Commun.](https://www.nature.com/articles/s41467-017-02317-2)). The R package is developed by [Zhihong Zhu](mailto:z.zhu1@uq.edu.au), [Zhili Zheng](mailto:zhili.zheng@uq.edu.au), [Futao Zhang](mailto:futao.zhang@uq.edu.au) and [Jian Yang](http://researchers.uq.edu.au/researcher/2713) at Institute for Molecular Bioscience, the University of Queensland. Bug reports or questions: [jian.yang@uq.edu.au](mailto:jian.yang@uq.edu.au).
+
+**Note:** The GSMR method has also been implemented in the GCTA software ([GCTA-GSMR](http://cnsgenomics.com/software/gcta/#GSMR))
+
+### Citation
+
+Zhu, Z. et al. (2018) Causal associations between risk factors and common diseases inferred from GWAS summary data. Nat. Commun. 9, 224 (https://www.nature.com/articles/s41467-017-02317-2).
+
+## Source code
+[gsmr_1.0.9.tar.gz](http://cnsgenomics.com/software/gsmr/static/gsmr_1.0.9.tar.gz)
+
+Note: We included a new HEIDI-outlier method (as part of the GSMR analysis) in gsmr v1.0.7. However, the new HEIDI-outlier method is currently under development and subject to changes during the method development. From the GSMR R package (>= version 1.0.8), we changed the default back to the original HEIDI-outlier method described in Zhu et al. ([2018 Nature Communications](https://www.nature.com/articles/s41467-017-02317-2)) and added a temporary flag ('gsmr2_beta') to test the new method. The command to use this flag can be found in the tutorial below. The new HEIDI-outlier method in gsmr (>= version 1.0.8) has been tested by extensive simulations and real data analyses. We will make a formal release in our next GSMR paper.
+
+Sample data are available in [test_data.zip](http://cnsgenomics.com/software/gsmr/static/test_data.zip). This document has been integrated in the gsmr R-package, we can check it by the standard command "?function_name" in R.
+
+## Installation
+
+The **gsmr** requires R >= 2.15, you can install it in R by:
+
+```{r eval=FALSE}
+# gsmr requires the R-package(s)
+install.packages(c('survey'));
+# install gsmr
+install.packages("http://cnsgenomics.com/software/gsmr/static/gsmr_1.0.9.tar.gz",repos=NULL,type="source")
+```
+
+### Update log
+V1.0.9 ([gmr_1.0.9.tar.gz](http://cnsgenomics.com/software/gsmr/static/gsmr_1.0.9.tar.gz) [PDF](http://cnsgenomics.com/software/gsmr/static/gsmr_doc_1.0.9.pdf), 18 Jun. 2019): Change the flag 'gsmr_beta' to 'gsmr2_beta'.
+
+V1.0.8 ([gmr_1.0.8.tar.gz](http://cnsgenomics.com/software/gsmr/static/gsmr_1.0.8.tar.gz) [PDF](http://cnsgenomics.com/software/gsmr/static/gsmr_doc_1.0.8.pdf), 21 Jan. 2019): Added a flag 'gsmr_beta' to use a testing version of the HEIDI-outlier method.
+
+V1.0.7 ([gmr_1.0.7.tar.gz](http://cnsgenomics.com/software/gsmr/static/gsmr_1.0.7.tar.gz) [PDF](http://cnsgenomics.com/software/gsmr/static/gsmr_doc_1.0.7.pdf), 9 Oct. 2018): Added a multi-SNP-based HEIDI-outlier test in the HEIDI-outlier analysis.
+
+V1.0.6 ([gmr_1.0.6.tar.gz](http://cnsgenomics.com/software/gsmr/static/gsmr_1.0.6.tar.gz) [PDF](http://cnsgenomics.com/software/gsmr/static/gsmr_doc_1.0.6.pdf), 23 Jan. 2018): Added a function to remove SNPs in high LD.
+
+V1.0.5 ([gmr_1.0.5.tar.gz](http://cnsgenomics.com/software/gsmr/static/gsmr_1.0.5.tar.gz) [PDF](http://cnsgenomics.com/software/gsmr/static/gsmr_doc_1.0.5.pdf), 13 Dec. 2017): Improved the approximation of the sampling covariance matrix.
+ 
+V1.0.4 ([gsmr_1.0.4.tar.gz](http://cnsgenomics.com/software/gsmr/static/gsmr_1.0.4.tar.gz) [PDF](http://cnsgenomics.com/software/gsmr/static/gsmr_doc_1.0.4.pdf), 6 Nov. 2017): Added the bi-directional GSMR analysis. The HEIDI-outlier analysis has been integrated in the GSMR analysis by default.
+ 
+V1.0.3 ([gsmr_1.0.3.tar.gz](http://cnsgenomics.com/software/gsmr/static/gsmr_1.0.3.tar.gz) [PDF](http://cnsgenomics.com/software/gsmr/static/gsmr_doc_1.0.3.pdf), 12 Oct. 2017): Added more example data.
+
+Removed the initial versions (8 Nov 2016).
+
+## Tutorial
+The GSMR analysis only requires summary-level data from GWAS. Here is an example, where the risk factor (*x*) is LDL cholesterol (LDL-c) and the disease (*y*) is coronary artery disease (CAD). GWAS summary data for both LDL-c and CAD are available in the public domain (Global Lipids Genetics Consortium et al. 2013, Nature Genetics; Nikpay, M. et al. 2015, Nature Genetics).
+
+### 1. Prepare data for GSMR analysis
+
+#### 1.1 Load the GWAS summary data
+
+```{r}
+library("gsmr")
+data("gsmr")
+head(gsmr_data)
+dim(gsmr_data)
+```
+This is the input format for the GSMR analysis. In this data set, there are `r nrow(gsmr_data)` near-independent SNPs associated with LDL-c at a genome-wide significance level (i.e. p < 5e-8). 
+
+* SNP: the genetic instrument  
+* a1: effect allele  
+* a2: the other allele  
+* a1_freq: frequency of a1  
+* bzx: the effect size of a1 on risk factor  
+* bzx_se: standard error of bzx  
+* bzx_pval: p value for bzx  
+* bzx_n: per-SNP sample size of GWAS for the risk factor  
+* bzy: the effect size of a1 on disease  
+* bzy_se: standard error of bzy  
+* bzy_pval: p value for bzy  
+* bzy_n: per-SNP sample size of GWAS for the disease
+
+#### 1.2 Estimate the LD correlation matrix
+```{r eval=FALSE}
+# Save the genetic variants and effect alleles in a text file using R
+write.table(gsmr_data[,c(1,2)], "gsmr_example_snps.allele", col.names=F, row.names=F, quote=F)
+# Extract the genotype data from a GWAS dataset using GCTA
+gcta64 --bfile gsmr_example --extract gsmr_example_snps.allele --update-ref-allele gsmr_example_snps.allele --recode --out gsmr_example
+```
+\textcolor{red}{Note: the two steps above guarantee that the LD correlations are calculated based on the effect alleles of the SNPs.}
+
+<p style="background-color:#fdd7df">Note: the two steps above guarantee that the LD correlations are calculated based on the effect alleles for the SNP effects.</p>
+
+
+```{r eval=FALSE}
+# Estimate LD correlation matrix using R
+snp_coeff_id = scan("gsmr_example.xmat.gz", what="", nlines=1)
+snp_coeff = read.table("gsmr_example.xmat.gz", header=F, skip=2)
+```
+```{r}
+# Match the SNP genotype data with the summary data
+snp_id = Reduce(intersect, list(gsmr_data$SNP, snp_coeff_id))
+gsmr_data = gsmr_data[match(snp_id, gsmr_data$SNP),]
+snp_order = match(snp_id, snp_coeff_id)
+snp_coeff_id = snp_coeff_id[snp_order]
+snp_coeff = snp_coeff[, snp_order]
+
+# Calculate the LD correlation matrix
+ldrho = cor(snp_coeff)
+
+# Check the size of the correlation matrix and double-check if the order of the SNPs in the LD correlation matrix is consistent with that in the GWAS summary data
+colnames(ldrho) = rownames(ldrho) = snp_coeff_id
+```
+```{r}
+dim(ldrho)
+# Show the first 5 rows and columns of the matrix  
+ldrho[1:5,1:5]
+```
+
+\textcolor{red}{Note: all the analyses implemented in this R-package only require the summary data and the LD correlation matrix ("ldrho") listed above.}
+
+<p style="background-color:#fdd7df">Note: all the analyses implemented in this R-package only require the summary data (e.g. "gsmr_data") and the LD correlation matrix (e.g. "ldrho") listed above.</p>
+
+### 2. Standardization
+
+This is an optional process. If the risk factor was not standardised in GWAS, the effect sizes can be scaled using the method below. Note that this process requires allele frequencies, z-statistics and sample size. After scaling, bzx is interpreted as the per-allele effect of a SNP on the exposure in standard deviation units.
+
+```{r message=FALSE, warning=FALSE}
+snpfreq = gsmr_data$a1_freq             # allele frequencies of the SNPs
+bzx = gsmr_data$bzx     # effects of the instruments on risk factor
+bzx_se = gsmr_data$bzx_se       # standard errors of bzx
+bzx_n = gsmr_data$bzx_n          # GWAS sample size for the risk factor
+std_zx = std_effect(snpfreq, bzx, bzx_se, bzx_n)    # perform standardisation
+gsmr_data$std_bzx = std_zx$b    # standardized bzx
+gsmr_data$std_bzx_se = std_zx$se    # standardized bzx_se
+head(gsmr_data)
+```
+
+### 3. GSMR analysis
+
+This is the main analysis of this R-package. It uses SNPs associated with the risk factor (e.g. at p < 5e-8) as the instruments to test for putative causal effect of the risk factor on the disease. The analysis involves a step that uses the [HEIDI-outlier](#4.HEIDI-outlieranalysis) approach to remove SNPs that have effects on both the risk factor and the disease because of pleiotropy.
+
+```{r message=FALSE, warning=FALSE}
+bzx = gsmr_data$std_bzx    # SNP effects on the risk factor
+bzx_se = gsmr_data$std_bzx_se    # standard errors of bzx
+bzx_pval = gsmr_data$bzx_pval   # p-values for bzx
+bzy = gsmr_data$bzy    # SNP effects on the disease
+bzy_se = gsmr_data$bzy_se    # standard errors of bzy
+bzy_pval = gsmr_data$bzy_pval    # p-values for bzy
+n_ref = 7703    # Sample size of the reference sample
+gwas_thresh = 5e-8    # GWAS threshold to select SNPs as the instruments for the GSMR analysis
+single_snp_heidi_thresh = 0.01    # p-value threshold for single-SNP-based HEIDI-outlier analysis
+multi_snp_heidi_thresh = 0.01    # p-value threshold for multi-SNP-based HEIDI-outlier analysis
+nsnps_thresh = 10   # the minimum number of instruments required for the GSMR analysis
+heidi_outlier_flag = T    # flag for HEIDI-outlier analysis
+ld_r2_thresh = 0.05    # LD r2 threshold to remove SNPs in high LD
+ld_fdr_thresh = 0.05   # FDR threshold to remove the chance correlations between the SNP instruments
+gsmr2_beta = 0     # 0 - the original HEIDI-outlier method; 1 - the new HEIDI-outlier method that is currently under development 
+gsmr_results = gsmr(bzx, bzx_se, bzx_pval, bzy, bzy_se, bzy_pval, ldrho, snp_coeff_id, n_ref, heidi_outlier_flag, gwas_thresh, single_snp_heidi_thresh, multi_snp_heidi_thresh, nsnps_thresh, ld_r2_thresh, ld_fdr_thresh, gsmr2_beta)    # GSMR analysis 
+filtered_index=gsmr_results$used_index
+cat("The estimated effect of the exposure on outcome: ",gsmr_results$bxy)
+cat("Standard error of bxy: ",gsmr_results$bxy_se)
+cat("P-value for bxy: ", gsmr_results$bxy_pval)
+cat("Indexes of the SNPs used in the GSMR analysis: ", gsmr_results$used_index[1:5], "...")
+cat("Number of SNPs with missing estimates in the summary data: ", length(gsmr_results$na_snps))
+cat("Number of non-significant SNPs: ", length(gsmr_results$weak_snps))
+cat("Number of SNPs in high LD ( LD rsq >", ld_r2_thresh, "): ", length(gsmr_results$linkage_snps))
+cat("Number of pleiotropic outliers: ", length(gsmr_results$pleio_snps))
+```
+
+### 4. Bi-directional GSMR analysis
+
+The script below runs bi-directional GSMR analyses, i.e. a forward-GSMR analysis as described above and a reverse-GSMR analysis that uses SNPs associated with the disease (e.g. at p < 5e-8) as the instruments to test for putative causal effect of the disease on risk factor.
+
+```{r message=FALSE, warning=FALSE}
+gsmr_results = bi_gsmr(bzx, bzx_se, bzx_pval, bzy, bzy_se, bzy_pval, ldrho, snp_coeff_id, n_ref, heidi_outlier_flag, gwas_thresh, single_snp_heidi_thresh, multi_snp_heidi_thresh, nsnps_thresh, ld_r2_thresh, ld_fdr_thresh, gsmr2_beta)    # GSMR analysis 
+cat("Effect of risk factor on disease: ",gsmr_results$forward_bxy)
+cat("Standard error of bxy in the forward-GSMR analysis: ",gsmr_results$forward_bxy_se)
+cat("P-value of bxy in the forward-GSMR analysis: ", gsmr_results$forward_bxy_pval)
+cat("Effect of disease on risk factor: ",gsmr_results$reverse_bxy)
+cat("Standard error of bxy in the reverse-GSMR analysis: ",gsmr_results$reverse_bxy_se)
+cat("P-value of bxy in the reverse-GSMR analysis: ", gsmr_results$reverse_bxy_pval)
+```
+
+### 5. Visualization
+
+```{r, fig.width=6, fig.height=6.5}
+effect_col = colors()[75]
+vals = c(bzx[filtered_index]-bzx_se[filtered_index], bzx[filtered_index]+bzx_se[filtered_index])
+xmin = min(vals); xmax = max(vals)
+vals = c(bzy[filtered_index]-bzy_se[filtered_index], bzy[filtered_index]+bzy_se[filtered_index])
+ymin = min(vals); ymax = max(vals)
+par(mar=c(5,5,4,2))
+plot(bzx[filtered_index], bzy[filtered_index], pch=20, cex=0.8, bty="n", cex.axis=1.1, cex.lab=1.2,
+        col=effect_col, xlim=c(xmin, xmax), ylim=c(ymin, ymax),
+        xlab=expression(LDL~cholesterol~(italic(b[zx]))),
+        ylab=expression(Coronary~artery~disease~(italic(b[zy]))))
+abline(0, gsmr_results$forward_bxy, lwd=1.5, lty=2, col="dim grey")
+
+nsnps = length(bzx[filtered_index])
+for( i in 1:nsnps ) {
+    # x axis
+    xstart = bzx[filtered_index [i]] - bzx_se[filtered_index[i]]; xend = bzx[filtered_index[i]] + bzx_se[filtered_index[i]]
+    ystart = bzy[filtered_index[i]]; yend = bzy[filtered_index[i]]
+    segments(xstart, ystart, xend, yend, lwd=1.5, col=effect_col)
+    # y axis
+    xstart = bzx[filtered_index[i]]; xend = bzx[filtered_index[i]] 
+    ystart = bzy[filtered_index[i]] - bzy_se[filtered_index[i]]; yend = bzy[filtered_index[i]] + bzy_se[filtered_index[i]]
+    segments(xstart, ystart, xend, yend, lwd=1.5, col=effect_col)
+}
+
+```

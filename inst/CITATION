@@ -1,0 +1,40 @@
+citHeader("To cite the 'copynumber' package in publications use:")
+
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
+vers <- paste("R package version", meta$Version)
+
+citEntry(entry="Manual",
+         title = "gsmr: A tool for GSMR and HEIDI analysis",
+         author = personList(as.person("Zhihong Zhu"),
+                             as.person("Zhili Zheng"),
+                             as.person("Futao Zhang")
+                             as.person("Jian Yang")),
+         year = year,
+         note = vers,
+
+         textVersion =
+         paste("Zhu, Z. et al. (",
+               year,
+               "). gsmr: A tool for GSMR and HEIDI analysis. ",
+               vers, ".", sep=""))
+
+citEntry(entry="Article",
+         title = "Multiple genetic instrument analysis identify causative associations between modifiable risk factors and common diseases.",
+         author = personList(as.person("Zhihong Zhu"),
+                             as.person("Futao Zhang"),
+                             as.person("Yang Wu""),
+                             as.person("Zhili Zheng"),
+                             as.person("Matthew R. Robinson"),
+                             as.person("John J. McGrath"),
+                             as.person("Peter M. Visscher"),
+                             as.person("Naomi R. Wray"),
+                             as.person("Jian Yang"),
+	 journal = "Submitted",
+         volume  = "?",
+         number  = "?",
+         year    = "2016",
+         pages   = "?",
+
+         textVersion =
+         paste("Zhu, Z. et al. Multiple genetic instrument analysis identify causative associations between modifiable risk factors and common diseases. Submitted.")
+)
