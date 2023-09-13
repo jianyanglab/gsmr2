@@ -42,4 +42,4 @@ We also implement the C++ version of GSMR/GSMR2 within the [GCTA](https://github
 
 For questions, please email us at Jian Yang (jian.yang@westlake.edu.cn)
 
-For bugs, please raise an issue in this repository and assign it to @anglixue.
+For bugs, please raise an issue in this repository and assign it to [@anglixue](https://github.com/anglixue).
