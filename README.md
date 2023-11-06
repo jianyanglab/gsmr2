@@ -1,6 +1,6 @@
 # GSMR2
  
-GSMR2 (Generalised Summary-data-based Mendelian Randomisation v2) is an improved version of [GSMR](https://github.com/jianyanglab/gsmr), which uses GWAS summary statistics to test for a putative causal association between two phenotypes (e.g., a modifiable risk factor and a disease) based on a multi-SNP model
+GSMR2 (Generalised Summary-data-based Mendelian Randomisation v2) is an improved version of [GSMR](https://github.com/jianyanglab/gsmr), which uses GWAS summary statistics to test for a putative causal association between two phenotypes (e.g., a modifiable risk factor and a disease) based on a multi-SNP model. This version implements a global heterogeneity test to remove invalid instrumental variables and provides a causal estimation that is more robust to directional pleiotropy.
 
 ## Installation
 
