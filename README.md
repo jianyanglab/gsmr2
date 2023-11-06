@@ -90,18 +90,20 @@ filtered_index=gsmr_results$used_index
 3. Check the results
 ```
 cat("The estimated effect of the exposure on outcome: ",gsmr_results$bxy)
-## The estimated effect of the exposure on outcome:  0.4322395
-
-cat("Standard error of bxy: ",gsmr_results$bxy_se)
-## Standard error of bxy:  0.02210985
 ```
+The estimated effect of the exposure on outcome:  0.4322395
+
+```
+cat("Standard error of bxy: ",gsmr_results$bxy_se)
+```
+Standard error of bxy:  0.02210985
 
 # GCTA version
 We also implement the C++ version of GSMR/GSMR2 within the [GCTA](https://github.com/jianyangqt/gcta). 
 
 # Citation
 
-**Angli Xue**, Zhihong Zhu, Huanwei Wang, Longda Jiang, Peter M. Visscher, Jian Zeng, Jian Yang. Unravelling the complex causal effects of substance use behaviours on common diseases. *Accepted in Principle*. [Preprint coming soon](https://www.researchsquare.com/article/rs-3465061/v1)
+**Angli Xue**, Zhihong Zhu, Huanwei Wang, Longda Jiang, Peter M. Visscher, Jian Zeng, Jian Yang. Unravelling the complex causal effects of substance use behaviours on common diseases. **Communications Medicine**. *Accepted in Principle*. [Preprint](https://www.researchsquare.com/article/rs-3465061/v1)
 
 For questions, please email us at Jian Yang (jian.yang@westlake.edu.cn)
 
