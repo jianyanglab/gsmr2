@@ -1,14 +1,13 @@
-Package: gsmr
-Maintainer: Zhihong Zhu <z.zhu1@uq.edu.au>, Angli Xue <a.xue@garvan.org.au>
+Package: gsmr2
+Maintainer: Zhihong Zhu <z.zhu1@uq.edu.au>, Angli Xue <a.xue@garvan.org.au>, Jian Yang <jian.yang@westlake.edu.cn>
 Author: Zhihong Zhu, Angli Xue, Zhili Zheng, Futao Zhang, Jian Yang
 License: GPL (>= 2.0)
 URL: https://yanglab.westlake.edu.cn/software/gsmr/
 Type: Package
-Title: gsmr - a tool for SMR and HEIDI analysis
-Description: A tool perform Generalized Summary-data-based Mendelian Randomization analysis (GSMR)
-   and HEterogeneity In Dependent Instruments analysis to remove pleiotropic outliers (HEIDI-outlier)
-Version: 1.1.0
-Date: 2017-12-19
+Title: gsmr2 - a tool for causal inference between complex traits
+Description: GSMR2 (Generalised Summary-data-based Mendelian Randomisation v2) is an improved version of GSMR, which uses GWAS summary statistics to test for a putative causal association between two phenotypes (e.g., a modifiable risk factor and a disease) based on a multi-SNP model. This version implements a global heterogeneity test to remove invalid instrumental variables and provides a causal estimation that is more robust to directional pleiotropy.
+Version: 1.1.1
+Date: 2024-1-31
 Depends: R (>= 2.15), methods, utils, stats, markdown
 Suggests: knitr, rmarkdown
 Imports: survey
@@ -16,4 +15,4 @@ LazyData: no
 NeedsCompilation: no
 VignetteBuilder: knitr
 RoxygenNote: 7.0.2
-Packaged: 2022-07-21 02:21:06 UTC; uqaxue
+Packaged: 2024-01-31 02:21:29 UTC; anglix
