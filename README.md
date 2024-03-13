@@ -20,10 +20,6 @@ Please run the following to install the `gsmr2` package:
 devtools::install_github("jianyanglab/gsmr2")
 ```
 
-or download the package [here](https://yanglab.westlake.edu.cn/software/gsmr/static/gsmr_1.1.1.tar.gz) and install it using the following command
-```
-install.packages("~/Downloads/gsmr_1.1.1.tar.gz", type = "source", repo = NULL)
-```
 
 ## Example analysis pipeline
 
