@@ -107,7 +107,7 @@ We also implement the C++ version of GSMR/GSMR2 within the [GCTA](https://github
 
 # Citation
 
-**Angli Xue**, Zhihong Zhu, Huanwei Wang, Longda Jiang, Peter M. Visscher, Jian Zeng, Jian Yang. Unravelling the complex causal effects of substance use behaviours on common diseases. **Communications Medicine**. *Accepted in Principle*. [Preprint](https://www.researchsquare.com/article/rs-3465061/v1)
+**Angli Xue**, Zhihong Zhu, Huanwei Wang, Longda Jiang, Peter M. Visscher, Jian Zeng, Jian Yang. Unravelling the complex causal effects of substance use behaviours on common diseases. **Communications Medicine**. [Full Text](https://www.nature.com/articles/s43856-024-00473-3)
 
 For questions, please email us at Jian Yang (jian.yang@westlake.edu.cn)
 
