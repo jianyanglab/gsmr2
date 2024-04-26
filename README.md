@@ -59,7 +59,7 @@ colnames(ldrho) = rownames(ldrho) = snp_coeff_id
 If you don't have the genotype file, you can estimate the LD matrix from an independent dataset of the same ancestry.
 Or, you can simply assume there is no LD between the SNPs by running the following
 ```
-ldrho = diag(nrow(gsmr_data)
+ldrho = diag(nrow(gsmr_data))
 colnames(ldrho) = rownames(ldrho) = snp_coeff_id = snpid = as.character(gsmr_data$SNP)
 ```
 
